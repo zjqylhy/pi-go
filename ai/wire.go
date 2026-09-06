@@ -165,7 +165,7 @@ func baseHeaders(opts *StreamOptions, apiKey string, extra map[string]string) ma
 	h := map[string]string{
 		"accept":       "application/json, text/event-stream",
 		"content-type": "application/json",
-		"user-agent":   "pi-go/0.1",
+		"user-agent":   "github.com/zjqylhy/pi-go/0.1",
 	}
 	if apiKey != "" && apiKey != "unused" {
 		h["authorization"] = "Bearer " + apiKey

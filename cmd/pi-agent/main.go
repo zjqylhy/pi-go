@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"pi-go/agent"
-	"pi-go/ai"
-	"pi-go/compaction"
-	"pi-go/harness"
-	"pi-go/session"
-	"pi-go/tui"
+	"github.com/zjqylhy/pi-go/agent"
+	"github.com/zjqylhy/pi-go/ai"
+	"github.com/zjqylhy/pi-go/compaction"
+	"github.com/zjqylhy/pi-go/harness"
+	"github.com/zjqylhy/pi-go/session"
+	"github.com/zjqylhy/pi-go/tui"
 )
 
 func main() {

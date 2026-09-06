@@ -4,7 +4,7 @@
 // of @earendil-works/pi-agent-core's session storage.
 package session
 
-import "pi-go/ai"
+import "github.com/zjqylhy/pi-go/ai"
 
 // EntryType discriminates the entry union.
 type EntryType = string

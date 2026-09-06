@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"pi-go/agent"
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/agent"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 func objSchema(props map[string]any, required ...string) map[string]any {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 func userMsg(text string) ai.Message {

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 const tipValueKey = "pi.session.tip"

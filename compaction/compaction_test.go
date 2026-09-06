@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"pi-go/ai"
-	"pi-go/session"
+	"github.com/zjqylhy/pi-go/ai"
+	"github.com/zjqylhy/pi-go/session"
 )
 
 func user(text string) ai.Message {

@@ -6,7 +6,7 @@ package agent
 import (
 	"context"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 // StreamFn produces an assistant-message event stream for a model request.

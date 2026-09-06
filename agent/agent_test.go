@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 func testModel() *ai.Model {

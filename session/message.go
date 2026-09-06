@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 // marshalMessage serializes an ai.Message union (discriminated by Role).

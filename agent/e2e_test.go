@@ -10,10 +10,10 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"pi-go/agent"
-	"pi-go/ai"
-	"pi-go/harness"
-	"pi-go/session"
+	"github.com/zjqylhy/pi-go/agent"
+	"github.com/zjqylhy/pi-go/ai"
+	"github.com/zjqylhy/pi-go/harness"
+	"github.com/zjqylhy/pi-go/session"
 )
 
 // TestAgentToolSessionIntegration drives the full pipeline — the real

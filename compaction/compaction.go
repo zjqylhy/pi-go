@@ -9,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"pi-go/ai"
-	"pi-go/session"
+	"github.com/zjqylhy/pi-go/ai"
+	"github.com/zjqylhy/pi-go/session"
 )
 
 // CompactionSettings controls automatic compaction thresholds.

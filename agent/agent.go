@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 // AgentOptions configure an Agent.

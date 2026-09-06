@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"pi-go/tui"
+	"github.com/zjqylhy/pi-go/tui"
 )
 
 func main() {

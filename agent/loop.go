@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 // AgentEventSink is the synchronous event consumer used by the low-level loop.

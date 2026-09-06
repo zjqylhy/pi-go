@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"pi-go/ai"
+	"github.com/zjqylhy/pi-go/ai"
 )
 
 func main() {
