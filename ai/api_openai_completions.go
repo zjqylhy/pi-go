@@ -140,6 +140,7 @@ type openAICompletionsConverter struct {
 	thinkingIdx int
 	toolIdx     map[int]int
 	toolJSON    map[int]string
+	started     bool
 	finalized   bool
 }
 
@@ -167,12 +168,11 @@ func (c *openAICompletionsConverter) handle(ev sseEvent) ([]Event, bool, error) 
 	if ev.Event == "error" {
 		return nil, true, errStreamError(ev.Data)
 	}
-	data, ok := parseSSEData(ev.Data)
-	if !ok {
+	if ev.Data == "" || ev.Data == "[DONE]" {
 		return nil, false, nil
 	}
 	var chunk map[string]any
-	if err := json.Unmarshal([]byte(data), &chunk); err != nil {
+	if err := json.Unmarshal([]byte(ev.Data), &chunk); err != nil {
 		return nil, false, nil
 	}
 
@@ -187,6 +187,10 @@ func (c *openAICompletionsConverter) handle(ev sseEvent) ([]Event, bool, error) 
 	}
 
 	var out []Event
+	if !c.started {
+		c.started = true
+		out = append(out, Event{Type: EventStart, Partial: c.partial})
+	}
 	terminal := false
 	choices, _ := chunk["choices"].([]any)
 	for _, raw := range choices {

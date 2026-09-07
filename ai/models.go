@@ -173,7 +173,7 @@ func (p *providerImpl) Stream(model *Model, context *Context, opts *StreamOption
 	if streams == nil {
 		return noAPIModelStream(p.id, model.API)
 	}
-	return streams.Stream(model, context, opts)
+	return streams.Stream(p.applyBaseURL(model), context, opts)
 }
 
 func (p *providerImpl) StreamSimple(model *Model, context *Context, opts *SimpleStreamOptions) *AssistantMessageEventStream {
@@ -181,7 +181,18 @@ func (p *providerImpl) StreamSimple(model *Model, context *Context, opts *Simple
 	if streams == nil {
 		return noAPIModelStream(p.id, model.API)
 	}
-	return streams.StreamSimple(model, context, opts)
+	return streams.StreamSimple(p.applyBaseURL(model), context, opts)
+}
+
+// applyBaseURL returns the model with the provider base URL applied when the
+// model does not define its own.
+func (p *providerImpl) applyBaseURL(model *Model) *Model {
+	if model.BaseURL != "" || p.baseURL == "" {
+		return model
+	}
+	cp := *model
+	cp.BaseURL = p.baseURL
+	return &cp
 }
 
 func (p *providerImpl) RefreshModels(ctx RefreshModelsContext) error {

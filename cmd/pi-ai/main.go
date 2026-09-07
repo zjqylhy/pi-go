@@ -15,11 +15,12 @@ import (
 func main() {
 	provider := flag.String("provider", "", "provider id")
 	model := flag.String("model", "", "model id")
+	list := flag.Bool("models", false, "list providers/models and exit")
 	flag.Parse()
 
 	m := ai.BuiltinModels()
 
-	if *provider == "" && *model == "" {
+	if *list || (*provider == "" && *model == "") {
 		listModels(m)
 		return
 	}

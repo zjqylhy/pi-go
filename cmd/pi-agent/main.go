@@ -20,8 +20,8 @@ import (
 )
 
 func main() {
-	provider := flag.String("provider", "anthropic", "provider id")
-	modelID := flag.String("model", "claude-sonnet-4-5", "model id")
+	provider := flag.String("provider", "deepseek", "provider id")
+	modelID := flag.String("model", "deepseek-chat", "model id")
 	dir := flag.String("dir", defaultSessionsDir(), "session storage directory")
 	doNew := flag.Bool("new", false, "start a fresh session instead of resuming")
 	doModels := flag.Bool("models", false, "list providers/models and exit")
