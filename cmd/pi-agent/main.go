@@ -103,7 +103,8 @@ func setupRuntime(providerID, modelID, dir string, fresh bool) (*runtime, error)
 			Model:        model,
 			Tools:        builtinTools(env),
 		},
-		StreamFn: models.StreamSimple,
+		StreamFn:  models.StreamSimple,
+		SessionID: sess.Metadata().ID,
 	})
 
 	// Load any prior transcript into the agent state, projecting compaction

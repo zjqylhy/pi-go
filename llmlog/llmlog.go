@@ -41,13 +41,13 @@ type LogEntry struct {
 	Content      string            `json:"content,omitempty"`
 }
 
-// Logger writes request/response records to a daily JSONL file.
+// Logger writes request/response records to per-session JSONL files, falling
+// back to a daily file when no session id is available.
 type Logger struct {
 	dir string
 
-	mu       sync.Mutex
-	file     *os.File
-	fileDate string
+	mu    sync.Mutex
+	files map[string]*os.File
 }
 
 // New returns a Logger writing into dir. An empty dir resolves to the value of
@@ -61,7 +61,7 @@ func New(dir string) *Logger {
 			dir = filepath.Join(home, ".pi-go", "logs")
 		}
 	}
-	return &Logger{dir: dir}
+	return &Logger{dir: dir, files: map[string]*os.File{}}
 }
 
 var defaultLogger = New("")
@@ -77,6 +77,7 @@ func (l *Logger) hook(model *ai.Model, ctxt *ai.Context, opts *ai.SimpleStreamOp
 	if opts == nil {
 		opts = &ai.SimpleStreamOptions{}
 	}
+	sessionID := opts.SessionID
 
 	var (
 		respMu      sync.Mutex
@@ -87,7 +88,7 @@ func (l *Logger) hook(model *ai.Model, ctxt *ai.Context, opts *ai.SimpleStreamOp
 	// Mirror upstream onPayload: inspect the outbound provider payload.
 	prevOnPayload := opts.OnPayload
 	opts.OnPayload = func(payload any, m *ai.Model) (any, error) {
-		l.write(LogEntry{
+		l.write(sessionID, LogEntry{
 			Timestamp: time.Now().UnixMilli(),
 			Direction: "request",
 			Model:     m.Provider + "/" + m.ID,
@@ -122,7 +123,7 @@ func (l *Logger) hook(model *ai.Model, ctxt *ai.Context, opts *ai.SimpleStreamOp
 		status := respStatus
 		headers := respHeaders
 		respMu.Unlock()
-		l.write(LogEntry{
+		l.write(sessionID, LogEntry{
 			Timestamp:    time.Now().UnixMilli(),
 			Direction:    "response",
 			Model:        model.Provider + "/" + model.ID,
@@ -152,8 +153,8 @@ func contentText(blocks []ai.ContentBlock) string {
 	return out
 }
 
-func (l *Logger) write(entry LogEntry) {
-	f, err := l.fileFor(time.Now())
+func (l *Logger) write(sessionID string, entry LogEntry) {
+	f, err := l.fileFor(sessionID, time.Now())
 	if err != nil {
 		return
 	}
@@ -163,30 +164,30 @@ func (l *Logger) write(entry LogEntry) {
 	l.mu.Unlock()
 }
 
-func (l *Logger) fileFor(now time.Time) (*os.File, error) {
-	today := now.Format("2006-01-02")
+// fileFor returns the open log file for a session, or the daily file when
+// sessionID is empty.
+func (l *Logger) fileFor(sessionID string, now time.Time) (*os.File, error) {
+	key := sessionID
+	if key == "" {
+		key = now.Format("2006-01-02")
+	}
+
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	if l.fileDate != today {
-		if l.file != nil {
-			_ = l.file.Close()
-			l.file = nil
-		}
-		l.fileDate = today
+	if f, ok := l.files[key]; ok {
+		return f, nil
 	}
-	if l.file == nil {
-		if l.dir == "" {
-			return nil, os.ErrNotExist
-		}
-		if err := os.MkdirAll(l.dir, 0700); err != nil {
-			return nil, err
-		}
-		f, err := os.OpenFile(filepath.Join(l.dir, "llm-"+today+".jsonl"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
-		if err != nil {
-			return nil, err
-		}
-		l.file = f
+	if l.dir == "" {
+		return nil, os.ErrNotExist
 	}
-	return l.file, nil
+	if err := os.MkdirAll(l.dir, 0700); err != nil {
+		return nil, err
+	}
+	f, err := os.OpenFile(filepath.Join(l.dir, "llm-"+key+".jsonl"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
+	if err != nil {
+		return nil, err
+	}
+	l.files[key] = f
+	return f, nil
 }
