@@ -27,9 +27,13 @@ func openAICompletionsStream(model *Model, context *Context, opts *StreamOptions
 	}
 	headers := baseHeaders(opts, apiKey, nil)
 
+	messages := openAIChatMessages(context.Messages, model)
+	if context.SystemPrompt != "" {
+		messages = append([]map[string]any{{"role": "system", "content": context.SystemPrompt}}, messages...)
+	}
 	body := map[string]any{
 		"model":          model.ID,
-		"messages":       openAIChatMessages(context.Messages, model),
+		"messages":       messages,
 		"stream":         true,
 		"stream_options": map[string]any{"include_usage": true},
 	}
