@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/zjqylhy/pi-go/ai"
+	_ "github.com/zjqylhy/pi-go/llmlog"
 )
 
 func main() {

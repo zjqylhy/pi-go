@@ -617,7 +617,11 @@ func (m *modelsImpl) Stream(model *Model, context *Context, opts *StreamOptions)
 		if err != nil {
 			return nil, err
 		}
-		return provider.Stream(requestModel, context, requestOpts), nil
+		sopts := &SimpleStreamOptions{StreamOptions: *requestOpts}
+		raw := func() *AssistantMessageEventStream {
+			return provider.Stream(requestModel, context, requestOpts)
+		}
+		return applyStreamSimpleHooks(requestModel, context, sopts, raw), nil
 	})
 }
 
@@ -640,7 +644,10 @@ func (m *modelsImpl) StreamSimple(model *Model, context *Context, opts *SimpleSt
 		}
 		cp := *opts
 		cp.StreamOptions = *requestOpts
-		return provider.StreamSimple(requestModel, context, &cp), nil
+		raw := func() *AssistantMessageEventStream {
+			return provider.StreamSimple(requestModel, context, &cp)
+		}
+		return applyStreamSimpleHooks(requestModel, context, &cp, raw), nil
 	})
 }
 

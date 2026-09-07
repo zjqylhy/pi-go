@@ -15,6 +15,7 @@ import (
 	"github.com/zjqylhy/pi-go/ai"
 	"github.com/zjqylhy/pi-go/compaction"
 	"github.com/zjqylhy/pi-go/harness"
+	_ "github.com/zjqylhy/pi-go/llmlog"
 	"github.com/zjqylhy/pi-go/session"
 	"github.com/zjqylhy/pi-go/tui"
 )
